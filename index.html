@@ -13,23 +13,48 @@
       --muted:#a855f7;
       font-family: 'Dancing Script', cursive;
     }
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,#ffd4e5 0%, #ffecf3 100%);color:#3b0a2e;overflow:hidden;}
 
-    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px;position:relative;}
-    .stage{width:100%;display:flex;flex-direction:column;align-items:center;gap:24px;z-index:1;}
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: linear-gradient(180deg,#ffd4e5 0%, #ffecf3 100%);
+      color: #3b0a2e;
+      overflow-y: auto; /* Scrollen erlauben */
+    }
+
+    .wrap{
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      position: relative;
+    }
+
+    .stage{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      z-index: 1;
+    }
 
     /* Klickbereiche */
     .button-grid{
       display:flex;
       justify-content:center;
-      gap:48px;
+      gap:24px;
       width:100%;
-      flex-wrap:nowrap;
+      flex-wrap: wrap; /* Buttons umbrechen bei kleinen Geräten */
     }
+
     .jug-card{
-      width:200px;
-      height:90px;
-      border-radius:20px;
+      width: 200px;
+      max-width: 45%; /* kleiner auf Handys */
+      height: 90px;
+      border-radius: 20px;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -37,13 +62,16 @@
       cursor:pointer;
       background:rgba(255,255,255,0.7);
       box-shadow:0 10px 40px rgba(0,0,0,0.25);
-      transition:transform .2s ease, box-shadow .2s ease;
+      transition: transform .2s ease, box-shadow .2s ease;
       flex-shrink:0;
+      margin-bottom: 16px; /* Abstand, wenn umbrechen */
     }
+
     .jug-card:hover{
       animation:shake 0.4s ease-in-out infinite;
       box-shadow:0 12px 50px rgba(0,0,0,0.35);
     }
+
     @keyframes shake {
       0% { transform: rotate(0deg); }
       25% { transform: rotate(2deg); }
@@ -58,6 +86,7 @@
       color:var(--accent);
       user-select:none;
       pointer-events:none;
+      text-align:center;
     }
 
     /* Zettel (oben im Bildschirm) */
@@ -86,7 +115,12 @@
       to {transform:translateX(-50%) translateY(0) scale(1);opacity:1}
     }
 
-    .hint{color:var(--muted);font-size:16px;text-align:center}
+    .hint{
+      color:var(--muted);
+      font-size:16px;
+      text-align:center;
+      margin-top:12px;
+    }
 
     /* Herzanimationen */
     .heart{
@@ -101,6 +135,21 @@
       0% {transform:translateY(0) scale(1); opacity:0.7;}
       50% {opacity:1;}
       100% {transform:translateY(-110vh) scale(1.4); opacity:0;}
+    }
+
+    /* Responsive Anpassungen */
+    @media (max-width: 500px) {
+      .jug-card {
+        width: 80%; /* auf sehr kleinen Bildschirmen */
+        height: 70px;
+      }
+      .click-text {
+        font-size: 18px;
+      }
+      .zettel {
+        font-size: 20px;
+        padding: 12px 16px;
+      }
     }
   </style>
 </head>
@@ -187,7 +236,7 @@
       heart.className = 'heart';
       heart.textContent = '❤';
       heart.style.left = Math.random()*100+'vw';
-      const size = 16 + Math.random()*32; // 16px - 48px
+      const size = 16 + Math.random()*32;
       heart.style.fontSize = size + 'px';
       heart.style.animationDuration = (4+Math.random()*4)+'s';
       document.body.appendChild(heart);
