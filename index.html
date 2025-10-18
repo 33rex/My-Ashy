@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Web4MyAsh</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&display=swap');
+
+    :root{
+      --bg:#ffe4f0;
+      --accent:#ec4899;
+      --muted:#a855f7;
+      font-family: 'Dancing Script', cursive;
+    }
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#ffd4e5 0%, #ffecf3 100%);color:#3b0a2e;overflow:hidden;}
+
+    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px;position:relative;}
+    .stage{width:100%;display:flex;flex-direction:column;align-items:center;gap:24px;z-index:1;}
+
+    /* Klickbereiche */
+    .button-grid{
+      display:flex;
+      justify-content:center;
+      gap:48px;
+      width:100%;
+      flex-wrap:nowrap;
+    }
+    .jug-card{
+      width:200px;
+      height:90px;
+      border-radius:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      cursor:pointer;
+      background:rgba(255,255,255,0.7);
+      box-shadow:0 10px 40px rgba(0,0,0,0.25);
+      transition:transform .2s ease, box-shadow .2s ease;
+      flex-shrink:0;
+    }
+    .jug-card:hover{
+      animation:shake 0.4s ease-in-out infinite;
+      box-shadow:0 12px 50px rgba(0,0,0,0.35);
+    }
+    @keyframes shake {
+      0% { transform: rotate(0deg); }
+      25% { transform: rotate(2deg); }
+      50% { transform: rotate(0deg); }
+      75% { transform: rotate(-2deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    .click-text{
+      font-size:24px;
+      font-weight:600;
+      color:var(--accent);
+      user-select:none;
+      pointer-events:none;
+    }
+
+    /* Zettel (oben im Bildschirm) */
+    .zettel{
+      position:fixed;
+      top:40px;
+      left:50%;
+      transform:translateX(-50%);
+      background:white;
+      color:#3b0a2e;
+      padding:16px 24px;
+      border-radius:14px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.35);
+      font-weight:600;
+      font-size:24px;
+      display:none;
+      text-align:center;
+      z-index:100;
+    }
+    .zettel.show{
+      display:block;
+      animation:pop .3s ease;
+    }
+    @keyframes pop {
+      from {transform:translateX(-50%) translateY(-10px) scale(.92);opacity:0}
+      to {transform:translateX(-50%) translateY(0) scale(1);opacity:1}
+    }
+
+    .hint{color:var(--muted);font-size:16px;text-align:center}
+
+    /* Herzanimationen */
+    .heart{
+      position:absolute;
+      bottom:-20px;
+      font-size:24px;
+      color:var(--accent);
+      opacity:0.7;
+      animation:floatUp 6s linear infinite;
+    }
+    @keyframes floatUp {
+      0% {transform:translateY(0) scale(1); opacity:0.7;}
+      50% {opacity:1;}
+      100% {transform:translateY(-110vh) scale(1.4); opacity:0;}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="stage">
+      <div class="button-grid">
+        <div class="jug-card" data-list="1">
+          <div class="click-text">if we fought</div>
+        </div>
+        <div class="jug-card" data-list="2">
+          <div class="click-text">if you miss me</div>
+        </div>
+        <div class="jug-card" data-list="3">
+          <div class="click-text">any time!</div>
+        </div>
+        <div class="jug-card" data-list="4">
+          <div class="click-text">if im mean</div>
+        </div>
+      </div>
+      <div class="zettel" id="zettel"></div>
+      <div class="hint">click me depending on your mood :3</div>
+    </div>
+  </div>
+
+  <script>
+    const zettelEl = document.getElementById('zettel');
+    const buttons = document.querySelectorAll('.jug-card');
+
+    const listen = {
+      1: [
+        "my baby, there sometimes is hard times in a relationship, but thats what makes a relationship. know that real love isnt easy and easy love isnt real. know that after this, we will be even closer to eachother than before. we, me and you, we learn from our mistakes, grow with each day, develop our relationship and thats what matters baby. i really love you my illean.",
+        "ash! you being here probably means that were giving eachother a silent treatment so go text me because thats everything i want baby, go text me, lets fix it together and be happy again. waiting and not saying anything to eachother really doesnt make sense. go text me, tell me how you feel and ill listen to you my darling. if its not about another boy i really will forgive most of the things if you promise me not to repeat them again. i love you my illean and you really are the greatest thing that has ever happened to me. MWAAAHHHH",
+        "sweetheart, fights happen and its alright! we fight because we care, i fight and argue about something that i love and care about and that is you baby. i really never put so much effert in a person as much as i did with you and i am ready to put more effert in us than i ever will be able to. i love you my sweetheart and know that all im waiting for is an honest and serious apology, and if i am the one in the wrong you can expect that from me baby. wallah ya illean id die for you.",
+        "Grrrrr>:C"
+      ],
+      2: [
+        "KNOW THAT I MISS YOU TOO BABYY🤧🤧",
+        "My babyyyy! im probably either sleeping or busy in school. you could write me alottt of texts until im back because you should know that i loveeee thatt :33 hehehe i love you my princess!",
+        "whatever im doing right now, you should know im really sorry and ill text you as soon as i can my princess.know that i really love texting you alot and that even if were in a fight. i want to spend my everyday, my every hour, my every minute and my every single second with you my baby and that until my last day on this earth. i love you illean.",
+        "if its because i died know that im happy that i died with you being my first and last true love baby. i love you my illean❤️🤍🤍"
+      ],
+      3: [
+        "This is your sign to send me face pics of you 😛😛😛",
+        "THIS IS YOUR SIGN TO SEND ME THIGH PICS HEHEEHEH🙈🙈",
+        "I LOVE YOU ILLEAN!!",
+        "MWAMWAMWA🤗",
+        "meooowwwwww :3",
+        "I love you my little predator❤️",
+        "wyd on here idiot go text me i probably miss you",
+        "i really love you ash.",
+        "you mean the wholeeeee wide world to me baby.",
+        "GO CALL ME I WANNA HEAR YOUR VOICE",
+        "i miss you -_-",
+        "Mwaaaaaaaaaaaaahhhh",
+        "i wanna suck your boobies! oops..!!🙈🙈",
+        "you stink go shower🤮"
+      ],
+      4: [
+        "IM MEAN TO YOU BECAUSE I LOVE YOUUUUUUUU!! hehehe",
+        "know its all jokes my little baby i would never be really mean to you and if you think i am then i really didnt mean it my princess!",
+        "hehehe i love being mean to you!",
+        "im soooooooo sorrryyyyyyyyyyy!!!!!!!"
+      ]
+    };
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', ()=>{
+        const listNum = btn.getAttribute('data-list');
+        const arr = listen[listNum];
+        const randomText = arr[Math.floor(Math.random() * arr.length)];
+        zettelEl.textContent = randomText;
+        zettelEl.classList.add('show');
+        clearTimeout(window._zettelTimeout);
+        window._zettelTimeout = setTimeout(()=>{
+          zettelEl.classList.remove('show');
+        },4000);
+      });
+    });
+
+    // Herzen generieren mit unterschiedlichen Größen
+    function createHeart(){
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.textContent = '❤';
+      heart.style.left = Math.random()*100+'vw';
+      const size = 16 + Math.random()*32; // 16px - 48px
+      heart.style.fontSize = size + 'px';
+      heart.style.animationDuration = (4+Math.random()*4)+'s';
+      document.body.appendChild(heart);
+      setTimeout(()=>heart.remove(),8000);
+    }
+    setInterval(createHeart, 500);
+  </script>
+</body>
+</html>
